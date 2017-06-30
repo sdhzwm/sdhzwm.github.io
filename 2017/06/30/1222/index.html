@@ -12,12 +12,10 @@
 
 
 
-  <meta name="description" content="使用Realm,pod install失败解决方法"/>
+  <meta name="description" content="1222"/>
 
 
 
-
-  <meta name="keywords" content="Realm,数据库," />
 
 
 
@@ -31,19 +29,16 @@
 
 
 
-<link rel="canonical" href="http://swifty.wang/2016/11/28/Realm-pod-install/"/>
+<link rel="canonical" href="http://swifty.wang/2017/06/30/1222/"/>
 
 
-<meta name="description" content="Realm pod install &amp;#x5931;&amp;#x8D25;12345678[!] /bin/bash -c set -esh build.sh cocoapods-setupcore is not a symlink. Deleting...Downloading dependency: core 1.0.1Downloading core failed:curl: (56) SSLR">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用Realm,pod install失败解决方法">
-<meta property="og:url" content="http://swifty.wang/2016/11/28/Realm-pod-install/index.html">
+<meta property="og:title" content="1222">
+<meta property="og:url" content="http://swifty.wang/2017/06/30/1222/index.html">
 <meta property="og:site_name" content="swifty">
-<meta property="og:description" content="Realm pod install &amp;#x5931;&amp;#x8D25;12345678[!] /bin/bash -c set -esh build.sh cocoapods-setupcore is not a symlink. Deleting...Downloading dependency: core 1.0.1Downloading core failed:curl: (56) SSLR">
-<meta property="og:updated_time" content="2017-06-10T14:45:56.000Z">
+<meta property="og:updated_time" content="2017-06-30T14:23:10.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用Realm,pod install失败解决方法">
-<meta name="twitter:description" content="Realm pod install &amp;#x5931;&amp;#x8D25;12345678[!] /bin/bash -c set -esh build.sh cocoapods-setupcore is not a symlink. Deleting...Downloading dependency: core 1.0.1Downloading core failed:curl: (56) SSLR">
+<meta name="twitter:title" content="1222">
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.4.x" />
@@ -82,7 +77,7 @@
 
 
 
-    <title> 使用Realm,pod install失败解决方法 · swifty </title>
+    <title> 1222 · swifty </title>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -225,37 +220,23 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          使用Realm,pod install失败解决方法
+          1222
         
       </h1>
 
       <div class="post-meta">
         <span class="post-time">
-          Nov 28, 2016
+          Jun 30, 2017
         </span>
       </div>
     </header>
 
     
     
-  <div class="post-toc" id="post-toc">
-    <h2 class="post-toc-title">Contents</h2>
-    <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Realm-pod-install-失败"><span class="toc-text">Realm pod install 失败</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装Realm的时候会慢一些-解决方法"><span class="toc-text">安装Realm的时候会慢一些,解决方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如果你之前pod-install失败了，会有之前的缓存，记得更新repo"><span class="toc-text">如果你之前pod install失败了，会有之前的缓存，记得更新repo:</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#那么现在把我们的core，放进core-bin："><span class="toc-text">那么现在把我们的core，放进core_bin：</span></a></li></ol></li></ol>
-    </div>
-  </div>
-
 
     <div class="post-content">
       
-        <hr>
-<h3 id="Realm-pod-install-&#x5931;&#x8D25;"><a href="#Realm-pod-install-&#x5931;&#x8D25;" class="headerlink" title="Realm pod install &#x5931;&#x8D25;"></a>Realm pod install &#x5931;&#x8D25;</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[!] /bin/bash -<span class="built_in">c</span> </div><div class="line"><span class="keyword">set</span> -e</div><div class="line">sh build.sh cocoapods-setup</div><div class="line"></div><div class="line">core <span class="keyword">is</span> not a symlink. <span class="type">Deleting</span>...</div><div class="line"><span class="type">Downloading</span> dependency: core <span class="number">1.0</span>.<span class="number">1</span></div><div class="line"><span class="type">Downloading</span> core failed:</div><div class="line">curl: (<span class="number">56</span>) <span class="type">SSLRead</span>() <span class="keyword">return</span> error -<span class="number">36</span></div></pre></td></tr></table></figure>
-<p><code>&#x89E3;&#x51B3;&#x65B9;&#x6CD5;&#xFF1A;
-rm -rf Pods&#xFF0C;&#x5220;&#x9664;&#x5DE5;&#x7A0B;&#x76EE;&#x5F55;&#x4E0B;&#x7684;pods&#x6587;&#x4EF6;&#x5939;&#xFF0C;&#x7136;&#x540E;&#x91CD;&#x65B0; pod install</code><br><a id="more"></a> </p>
-<h3 id="&#x5B89;&#x88C5;Realm&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x6162;&#x4E00;&#x4E9B;-&#x89E3;&#x51B3;&#x65B9;&#x6CD5;"><a href="#&#x5B89;&#x88C5;Realm&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x6162;&#x4E00;&#x4E9B;-&#x89E3;&#x51B3;&#x65B9;&#x6CD5;" class="headerlink" title="&#x5B89;&#x88C5;Realm&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x6162;&#x4E00;&#x4E9B;,&#x89E3;&#x51B3;&#x65B9;&#x6CD5;"></a>&#x5B89;&#x88C5;Realm&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x6162;&#x4E00;&#x4E9B;,&#x89E3;&#x51B3;&#x65B9;&#x6CD5;</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">curl https:<span class="comment">//static.realm.io/downloads/core/realm-core-1.0.1.tar.bz2 -O</span></div><div class="line">mkdir $<span class="type">TMPDIR</span>/core_bin</div><div class="line">mv realm-core-<span class="number">1.0</span>.<span class="number">1</span>.tar.bz2 $<span class="type">TMPDIR</span>/core_bin</div></pre></td></tr></table></figure>
-<h3 id="&#x5982;&#x679C;&#x4F60;&#x4E4B;&#x524D;pod-install&#x5931;&#x8D25;&#x4E86;&#xFF0C;&#x4F1A;&#x6709;&#x4E4B;&#x524D;&#x7684;&#x7F13;&#x5B58;&#xFF0C;&#x8BB0;&#x5F97;&#x66F4;&#x65B0;repo"><a href="#&#x5982;&#x679C;&#x4F60;&#x4E4B;&#x524D;pod-install&#x5931;&#x8D25;&#x4E86;&#xFF0C;&#x4F1A;&#x6709;&#x4E4B;&#x524D;&#x7684;&#x7F13;&#x5B58;&#xFF0C;&#x8BB0;&#x5F97;&#x66F4;&#x65B0;repo" class="headerlink" title="&#x5982;&#x679C;&#x4F60;&#x4E4B;&#x524D;pod install&#x5931;&#x8D25;&#x4E86;&#xFF0C;&#x4F1A;&#x6709;&#x4E4B;&#x524D;&#x7684;&#x7F13;&#x5B58;&#xFF0C;&#x8BB0;&#x5F97;&#x66F4;&#x65B0;repo:"></a>&#x5982;&#x679C;&#x4F60;&#x4E4B;&#x524D;pod install&#x5931;&#x8D25;&#x4E86;&#xFF0C;&#x4F1A;&#x6709;&#x4E4B;&#x524D;&#x7684;&#x7F13;&#x5B58;&#xFF0C;&#x8BB0;&#x5F97;&#x66F4;&#x65B0;repo:</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod repo update --verbose</div></pre></td></tr></table></figure>
-<h4 id="&#x90A3;&#x4E48;&#x73B0;&#x5728;&#x628A;&#x6211;&#x4EEC;&#x7684;core&#xFF0C;&#x653E;&#x8FDB;core-bin&#xFF1A;"><a href="#&#x90A3;&#x4E48;&#x73B0;&#x5728;&#x628A;&#x6211;&#x4EEC;&#x7684;core&#xFF0C;&#x653E;&#x8FDB;core-bin&#xFF1A;" class="headerlink" title="&#x90A3;&#x4E48;&#x73B0;&#x5728;&#x628A;&#x6211;&#x4EEC;&#x7684;core&#xFF0C;&#x653E;&#x8FDB;core_bin&#xFF1A;"></a>&#x90A3;&#x4E48;&#x73B0;&#x5728;&#x628A;&#x6211;&#x4EEC;&#x7684;core&#xFF0C;&#x653E;&#x8FDB;core_bin&#xFF1A;</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mkdir -p $<span class="type">TMPDIR</span>/core_bin; cd /core&#x7684;&#x5B58;&#x50A8;&#x5730;&#x5740;/<span class="type">Realm</span>\ <span class="type">Core</span>; cp `ls -r1 | head -1t` $<span class="type">TMPDIR</span>/core_bin/.</div></pre></td></tr></table></figure>
-
+        
       
     </div>
 
@@ -274,7 +255,7 @@ rm -rf Pods&#xFF0C;&#x5220;&#x9664;&#x5DE5;&#x7A0B;&#x76EE;&#x5F55;&#x4E0B;&#x76
     </p>
     <p class="copyright-item">
       <span>链接: </span>
-      <a href="http://swifty.wang/2016/11/28/Realm-pod-install/">http://swifty.wang/2016/11/28/Realm-pod-install/</a>
+      <a href="http://swifty.wang/2017/06/30/1222/">http://swifty.wang/2017/06/30/1222/</a>
     </p>
 
     <p class="copyright-item lincese">
@@ -310,27 +291,13 @@ rm -rf Pods&#xFF0C;&#x5220;&#x9664;&#x5DE5;&#x7A0B;&#x76EE;&#x5F55;&#x4E0B;&#x76
     
       <footer class="post-footer">
         
-          <div class="post-tags">
-            
-              <a href="/tags/Realm/">Realm</a>
-            
-              <a href="/tags/数据库/">数据库</a>
-            
-          </div>
-        
         
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2016/11/28/11-28-1/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">6-1|为什么说，梦想会妨碍你成功</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
     
-    
-      <a class="next" href="/2016/11/27/jihua/">
-        <span class="next-text nav-default">对得到及超级个体的笔记的计划</span>
+      <a class="next" href="/2017/06/30/124/">
+        <span class="next-text nav-default">124</span>
         <span class="prev-text nav-mobile">Next</span>
         <i class="iconfont icon-right"></i>
       </a>

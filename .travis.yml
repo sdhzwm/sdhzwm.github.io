@@ -1,0 +1,25 @@
+language: node_js
+node_js: stable
+# S: Build Lifecycle
+install:
+  - npm install node-sass --registry = http：//registry.npm.taobao.org
+
+#before_script:
+# - npm install -g gulp
+script:
+- hexo g
+after_script:
+- cd ./public
+- git init
+- git config user.name "sdhzwm"
+- git config user.email "ssdhzwm@gmail.com
+- git add .
+- git commit -m "Update docs"
+- git push --force --quiet "https://${GitHub_TOKEN}@${GH_REF}" master:master
+# E: Build LifeCycle
+branches:
+only:
+- blogSpecs
+env:
+global:
+- GH_REF: github.com/sdhzwm/sdhzwm.github.io.git

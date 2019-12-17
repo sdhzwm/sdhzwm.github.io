@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
-<meta name="description" content="好问题，好答案"><meta name="keywords" content="思考, 笔记, 总结, 行知"><link rel="alternate" href="/atom.xml" title="行知"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<meta name="description" content="好问题，好答案"><meta name="keywords" content="笔记, 思考, 总结, 行知"><link rel="alternate" href="/atom.xml" title="行知"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
 <link rel="canonical" href="https://zhixing.wiki/2018/07/16/20180716/">
 
 <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css">
@@ -159,8 +159,8 @@
       
       <footer class="post-footer">
         <div class="post-tags">
-            <a href="/tags/思考/">思考</a>
             <a href="/tags/笔记/">笔记</a>
+            <a href="/tags/思考/">思考</a>
             <a href="/tags/总结/">总结</a>
             </div>
         
@@ -175,9 +175,8 @@
         <i class="iconfont icon-right"></i>
       </a>
     </nav></footer>
-    </article></div><div class="comments" id="comments"><div id="lv-container" data-id="city" data-uid="MTAyMC80Nzk2My8yNDQ2MA==">
-        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
-      </div>  
+    </article></div><div class="comments" id="comments">
+      <div id="vcomments"></div>
     
   </div></div>
       </main>
@@ -206,19 +205,26 @@
       <div class="back-to-top" id="back-to-top">
         <i class="iconfont icon-up"></i>
       </div>
-    </div><script type="text/javascript">
-	(function(d, s) {
-       var j, e = d.getElementsByTagName(s)[0];
+    </div>
+<!-- valine Comments -->
+<!-- do not set the version number -->
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<!-- or set latest -->
+<script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+<!-- or Default value -->
+<script src="//unpkg.com/valine"></script>
+<script type="text/javascript">
+    new Valine({
+        el: '#vcomments',
+        notify: false,
+        verify: false,
+        app_id: "Q70i39P2Uj1EipkQEoqgVhTK",
+        app_key: "84cyyxaTYaAY2wS0ywRvq7uB",
+        placeholder: "快来留下评论吧~",
+        avatar: 'mm'
+    });
+</script>
 
-       if (typeof LivereTower === 'function') { return; }
-
-       j = d.createElement(s);
-       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-       j.async = true;
-
-       e.parentNode.insertBefore(j, e);
-   })(document, 'script');
-  </script>
 
 <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
   <script type="text/javascript" src="/lib/slideout/slideout.js"></script>

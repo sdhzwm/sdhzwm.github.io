@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://xingzhi.wiki/"/>
-  <updated>2020-07-20T14:16:42.029Z</updated>
+  <updated>2021-04-13T13:02:18.468Z</updated>
   <id>http://xingzhi.wiki/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>APP启动速度优化与监控笔记</title>
+    <link href="http://xingzhi.wiki/2020/09/12/20200912-iOS-Activate/"/>
+    <id>http://xingzhi.wiki/2020/09/12/20200912-iOS-Activate/</id>
+    <published>2020-09-12T14:29:26.000Z</published>
+    <updated>2021-04-13T13:02:18.468Z</updated>
+    
+    <content type="html"><![CDATA[<p>APP 启动速度优化，一度在开发过程中是不怎么重视的需求之一。然而在市场竞争逐渐热化的当下，APP 中任何能够提升用户体验的方向都很值得程序员们进一步的探索和研究。戴铭在极客时间的专栏中提到这样案例：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">假设你在排队结账时，掏出手机打开 App 甲准备扫码支付，结果半天进不去，后面排队的人给你压力够大吧。然后，你又打开 App 乙，秒进，支付完成。试想一下，以后再支付时你会选择哪个 App 呢。不难想象，在提供的功能和服务相似的情况下，一款 App 的启动速度，不单单是用户体验的事情，往往还决定了它能否获取更多的用户。这就好像陌生人第一次碰面，第一感觉往往决定了他们接下来是否会继续交往。</span><br></pre></td></tr></table></figure><p>由此可见，启动速度的优化必然就是 App 开发过程中，不可或缺的一个环节。</p><a id="more"></a><h2 id="启动类型"><a href="#启动类型" class="headerlink" title="启动类型"></a>启动类型</h2><p>一般情况下，App 的启动分为冷启动和热启动。</p><ul><li>Cold ：App 重启后启动，不在内存里也没有进程存在，需要系统新创建一个进程分配给它启动的情况。这是一次完整的启动过程</li><li>Warm：App最近结束后再启动，有部分内存，但没有进程存在</li><li>Resume：App没结束，只是暂停，全在内存中，存在进程。</li></ul><p>用户能感知到的启动慢，其实都发生在主线程上。而主线程慢的原因有很多，比如在主线程上执行了大文件读写操作、在渲染周期中执行了大量计算等。所以我们更多的方法调用就应该做成按需执行，将启动压力分摊，只留下那些启动后方法都会依赖的方法和库的初始化，比如网络库、Crash 库等。而剩下那些需要预加载的功能可以放到启动阶段后再执行。</p><h2 id="APP启动阶段"><a href="#APP启动阶段" class="headerlink" title="APP启动阶段"></a>APP启动阶段</h2><p>App 的启动时间，指的是<strong>从用户点击 App 开始，到用户看到第一个界面之间的时间</strong>。总结来说，App 的启动主要包括三个阶段：</p><ul><li>main() 函数执行前；</li><li>main() 函数执行后；</li><li>首屏渲染完成后。</li></ul><h3 id="main-函数执行前"><a href="#main-函数执行前" class="headerlink" title="main() 函数执行前"></a>main() 函数执行前</h3><p>该阶段，系统主要会做下面几件事情：</p><ul><li>加载可执行文件（App 的.o 文件的集合）</li><li>加载动态链接库，进行 <code>rebase</code> 指针调整和 <code>bind</code> 符号绑定；</li><li>Objc 运行时的初始处理，包括 Objc 相关类的注册、<code>category</code> 注册、<code>selector</code> 唯一性检查等；</li><li>初始化，包括了执行 <code>+load()</code> 方法、<code>attribute((constructor))`</code> 修饰的函数的调用、创建 C++ 静态全局变量。</li></ul><p>相应地，这个阶段对于启动速度优化来说，可以做的事情包括：</p><ul><li>减少动态库加载。每个库本身都有依赖关系，苹果公司建议使用更少的动态库，并且建议<strong>在使用动态库的数量较多时，尽量将多个动态库进行合并</strong>。数量上，<strong>苹果公司建议最多使用 6 个非系统动态库</strong>。</li><li><strong>减少加载启动后不会去使用的类或者方法</strong>。</li><li><strong><code>+load()</code> 方法里的内容可以放到首屏渲染完成后再执行，或使用 <code>+initialize()</code> 方法替换掉</strong>。因为，在一个 <code>+load()</code> 方法里，进行运行时方法替换操作会带来 4 毫秒的消耗。不要小看这 4 毫秒，积少成多，执行 <code></code>+load() `方法对启动速度的影响会越来越大。</li><li>控制 C++ 全局变量的数量。</li></ul><h3 id="main-函数执行后"><a href="#main-函数执行后" class="headerlink" title="main() 函数执行后"></a>main() 函数执行后</h3><p><code>main()</code> 函数执行后的阶段，指的是从 <code>main()</code> 函数执行开始，到 <code>appDelegate</code> 的 <code>didFinishLaunchingWithOptions</code> 方法里首屏渲染相关方法执行完成。也就是说从<code>main()</code>函数执行后到  <code>launchdidfinish</code> 结束前，都属于首屏渲染。</p><p>首页的业务代码都是要在这个阶段，也就是首屏渲染前执行的，主要包括了：</p><ul><li>首屏初始化所需配置文件的读写操作；</li><li>首屏列表大数据的读取；</li><li>首屏渲染的大量计算等。</li></ul><p>很多时候，开发者会把各种初始化工作都放到这个阶段执行，导致渲染完成滞后。更加优化的开发方式，应该是<strong>从功能上梳理出哪些是首屏渲染必要的初始化功能，哪些是 App 启动必要的初始化功能，而哪些是只需要在对应功能开始使用时才需要初始化的</strong>。梳理完之后，将这些初始化功能分别放到合适的阶段进行。例如将方法调用做成按需执行，把压力分摊，只留下启动后方法都会依赖的方法和库。比如网络库、Crash库，需要预加载的功能就放到启动阶段后再执行。</p><h3 id="首屏渲染完成后"><a href="#首屏渲染完成后" class="headerlink" title="首屏渲染完成后"></a>首屏渲染完成后</h3><p>首屏渲染后的这个阶段，主要完成的是，<strong>非首屏其他业务服务模块的初始化、监听的注册、配置文件的读取等</strong>。<br>从函数上来看，这个阶段指的就是截止到 <code>didFinishLaunchingWithOptions</code> 方法作用域内执行首屏渲染之后的所有方法执行完成。简单说的话，这个阶段就是从渲染完成时开始，到 <code>didFinishLaunchingWithOptions</code> 方法作用域结束时结束。</p><p>明白了 App 启动阶段需要完成的工作后，我们就可以有的放矢地进行启动速度的优化了。这些优化，包括了功能级别和方法级别的启动优化。</p><h3 id="功能级优化"><a href="#功能级优化" class="headerlink" title="功能级优化"></a>功能级优化</h3><p>功能级别的启动优化，就是要从 <code>main()</code> 函数执行后这个阶段下手。</p><p>优化的思路是： <code>main()</code> 函数开始执行后到首屏渲染完成前只处理首屏相关的业务，其他非首屏业务的初始化、监听注册、配置文件读取等都放到首屏渲染完成后去做。</p><h3 id="方法级优化"><a href="#方法级优化" class="headerlink" title="方法级优化"></a>方法级优化</h3><p>接下来，我们需要进一步做的，是检查首屏渲染完成前主线程上有哪些耗时方法，将没必要的耗时方法滞后或者异步执行。通常情况下，耗时较长的方法主要发生在计算大量数据的情况下，<strong>具体的表现就是加载、编辑、存储图片和文件等资源</strong>。</p><p>然而任务延后的处理不能粗犷的一口气在启动完成后在主线程一起执行，那样用户仅仅只是看到了页面，依然没法响应操作。那该怎么做呢？一般是创建四个队列，分别是：</p><ul><li>异步串行队列</li><li>异步并行队列</li><li>闲时主线程串行队列</li><li>闲时异步串行队列</li></ul><p><strong>有依赖关系的任务可以放到异步串行队列中执行</strong>。<br>异步并行队列可以分组执行，比如使用 <code>dispatch_group</code>，然后对每组任务数量进行限制，避免 CPU、线程和内存瞬时激增影响主线程用户操作，定义有限数量的串行队列，每个串行队列做特定的事情，这样也能够避免性能消耗短时间突然暴涨引起无法响应用户操作。<br>使用 <code>dispatch_semaphore_t</code> 在信号量阻塞主队列时容易出现优先级反转，需要减少使用，确保 <code>QoS</code> 传播。可以用 <code>dispatch group</code> 替代，性能一样，功能不差。异步编程可以直接 <code>GCD</code> 接口来写，也可以使用阿里的协程框架</p><p><a href="https://github.com/alibaba/coobjc" target="_blank" rel="noopener">coobjc GitHub - alibaba/coobjc</a>  </p><p>闲时队列实现方式是监听主线程 <code>runloop</code> 状态，在 <code>kCFRunLoopBeforeWaiting</code> 时开始执行闲时队列里的任务，在 <code>kCFRunLoopAfterWaiting</code> 时停止。</p><h2 id="App-启动速度的监控"><a href="#App-启动速度的监控" class="headerlink" title="App 启动速度的监控"></a>App 启动速度的监控</h2><p>目前来看，对 App 启动速度的监控，主要有两种手段。</p><ul><li>第一种方法是，定时抓取主线程上的方法调用堆栈，计算一段时间里各个方法的耗时。</li><li>第二种方法是，对 <code>objc_msgSend</code> 方法进行 <code>hook</code> 来掌握所有方法的执行耗时。</li></ul><h3 id="Time-Profiler"><a href="#Time-Profiler" class="headerlink" title="Time Profiler"></a>Time Profiler</h3><p>Xcode 工具套件 <code>Instruments</code> 里自带的 <code>Time Profiler</code> 采用的就是这种方式。</p><p>这种方式的优点是，开发类似工具成本不高，能够快速开发后集成到 App 中，以便在真实环境中进行检查。</p><p>说到定时抓取，就会涉及到定时间隔的长短问题。</p><ul><li>定时间隔设置得长了，会漏掉一些方法，从而导致检查出来的耗时不精确；</li><li>而定时间隔设置得短了，抓取堆栈这个方法本身调用过多也会影响整体耗时，导致结果不准确。</li></ul><p><strong>一般将这个定时间隔设置为 0.01 秒。这样设置，对整体耗时的影响小，不过很多方法耗时就不精确了</strong>。但因为整体耗时的数据更加重要些，单个方法耗时精度不高也是可以接受的，所以这个设置也是没问题的。</p><p>总结来说，定时抓取主线程调用栈的方式虽然精准度不够高，但也是够用的。</p><h3 id="用-objc-msgSend-方法进行-hook"><a href="#用-objc-msgSend-方法进行-hook" class="headerlink" title="用 objc_msgSend 方法进行 hook"></a>用 <code>objc_msgSend</code> 方法进行 <code>hook</code></h3><p><code>hook</code> 方法的意思是，在原方法开始执行时换成执行其他你指定的方法，或者在原有方法执行前后执行你指定的方法，来达到掌握和改变指定方法的目的。</p><p><code>hook objc_msgSend</code> 这种方式的优点是非常精确，而缺点是只能针对 Objective-C 的方法。当然，对于 c 方法和 block 也不是没有办法，你可以使用 <code>libffi</code> 的 <code>ffi_call</code> 来达成 <code>hook</code>，但缺点就是编写维护相关工具门槛高。</p><p>如果对于检查结果精准度要求高的话，比较使用 <code>hook</code> <code>objc_msgSend</code> 方式来检查启动方法的执行耗时。</p><p><strong>为什么<code>hook 了 objc_msgSend</code> 方法,可以 <code>hook</code> 全部 Objective-C 的方法？</strong></p><p>Objective-C 里每个对象都会指向一个类，每个类都会有一个方法列表，方法列表里的每个方法都是由 <code>selector</code>、<code>函数指针和</code> <code>metadata</code> 组成的。</p><p><code>objc_msgSend</code> 方法干的活儿，就是在运行时根据对象和方法的 <code>selector</code> 去找到对应的函数指针，然后执行。也就是说，<code>objc_msgSend</code> 是 Objective-C 里方法执行的必经之路，能够控制所有的 Objective-C 的方法。</p><p><code>objc_msgSend</code> 本身是用汇编语言写的，这样做的原因主要有两个：</p><ul><li>一个原因是，<code>objc_msgSend</code> 的调用频次最高，在它上面进行的性能优化能够提升整个 App 生命周期的性能。而汇编语言在性能优化上属于原子级优化，能够把优化做到极致。所以，这种投入产出比无疑是最大的。</li><li>另一个原因是，其他语言难以实现未知参数跳转到任意函数指针的功能。</li></ul><p>详细参见 <a href="https://opensource.apple.com/source/objc4/objc4-723/runtime/Messengers.subproj/" target="_blank" rel="noopener">苹果公司开源网站</a> 查看 <code>objc_msgSend</code> 源码：<br>![[Pasted image 20210413143919.png]]</p><p><code>objc_msgSend</code> 是 iOS 方式执行最核心的部分，编程领域的宝藏。<code>objc_msgSend</code> 方法执行的逻辑是：<strong>先获取对象对应类的信息，再获取方法的缓存，根据方法的 <code>selector</code> 查找函数指针，经过异常错误处理后，最后跳到对应函数的实现</strong>。</p><h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>本文主要为 <a href="https://www.infoq.cn/article/xJb3CYSClpHV5sh5923q" target="_blank" rel="noopener">高德APP启动耗时剖析与优化实践（iOS篇）-InfoQ</a> 和 <a href="https://time.geekbang.org/column/article/85331" target="_blank" rel="noopener">戴铭: App 启动速度怎么做优化与监控？</a> 两文的笔记整理。从两文看来，APP 启动速度优化，对于技术人员来讲，不单单是提升启动速度，还是对技术人员技术积累，开发团队协作要求的考验。</p><p>当然APP优化，非一日之工，然行则将至，行而不辍，或可未来可期。</p><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul><li><a href="https://time.geekbang.org/column/article/85331" target="_blank" rel="noopener">戴铭: App 启动速度怎么做优化与监控？</a></li><li><a href="https://www.infoq.cn/article/xJb3CYSClpHV5sh5923q" target="_blank" rel="noopener">高德APP启动耗时剖析与优化实践（iOS篇）-InfoQ</a></li><li><a href="https://opensource.apple.com/source/objc4/objc4-723/runtime/Messengers.subproj/" target="_blank" rel="noopener">苹果公司开源网站</a></li><li><a href="[https://developer.apple.com/videos/play/wwdc2019/423/](https://developer.apple.com/videos/play/wwdc2019/423/">2019 年 WWDC 启动优化专题</a>)</li><li><a href="https://developer.apple.com/videos/play/wwdc2016/418/" target="_blank" rel="noopener">Using Time Profiler in Instruments - WWDC 2016 - Videos - Apple Developer</a>  </li><li><a href="https://developer.apple.com/videos/play/wwdc2016/719/" target="_blank" rel="noopener">Optimizing I/O for Performance and Battery Life - WWDC 2016 - Videos - Apple Developer</a>  </li><li><a href="https://developer.apple.com/videos/play/wwdc2016/406/" target="_blank" rel="noopener">Optimizing App Startup Time - WWDC 2016 - Videos - Apple Developer</a>  </li><li><a href="https://developer.apple.com/videos/play/wwdc2017/413/" target="_blank" rel="noopener">App Startup Time: Past, Present, and Future - WWDC 2017 - Videos - Apple Developer</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;APP 启动速度优化，一度在开发过程中是不怎么重视的需求之一。然而在市场竞争逐渐热化的当下，APP 中任何能够提升用户体验的方向都很值得程序员们进一步的探索和研究。戴铭在极客时间的专栏中提到这样案例：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;假设你在排队结账时，掏出手机打开 App 甲准备扫码支付，结果半天进不去，后面排队的人给你压力够大吧。然后，你又打开 App 乙，秒进，支付完成。试想一下，以后再支付时你会选择哪个 App 呢。不难想象，在提供的功能和服务相似的情况下，一款 App 的启动速度，不单单是用户体验的事情，往往还决定了它能否获取更多的用户。这就好像陌生人第一次碰面，第一感觉往往决定了他们接下来是否会继续交往。&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;由此可见，启动速度的优化必然就是 App 开发过程中，不可或缺的一个环节。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="技术人生" scheme="http://xingzhi.wiki/categories/%E6%8A%80%E6%9C%AF%E4%BA%BA%E7%94%9F/"/>
+    
+      <category term="读书笔记" scheme="http://xingzhi.wiki/categories/%E6%8A%80%E6%9C%AF%E4%BA%BA%E7%94%9F/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="iOS性能" scheme="http://xingzhi.wiki/tags/iOS%E6%80%A7%E8%83%BD/"/>
+    
+      <category term="启动优化" scheme="http://xingzhi.wiki/tags/%E5%90%AF%E5%8A%A8%E4%BC%98%E5%8C%96/"/>
+    
+  </entry>
   
   <entry>
     <title>20200719-29Week</title>
@@ -157,6 +185,30 @@
       <category term="产品思维" scheme="http://xingzhi.wiki/tags/%E4%BA%A7%E5%93%81%E6%80%9D%E7%BB%B4/"/>
     
       <category term="时间" scheme="http://xingzhi.wiki/tags/%E6%97%B6%E9%97%B4/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>对当前移动端开发的一点想法</title>
+    <link href="http://xingzhi.wiki/2020/06/16/20200616-jishuxiangfa/"/>
+    <id>http://xingzhi.wiki/2020/06/16/20200616-jishuxiangfa/</id>
+    <published>2020-06-16T14:29:26.000Z</published>
+    <updated>2021-04-13T13:04:55.052Z</updated>
+    
+    <content type="html"><![CDATA[<p>做iOS的也有些年头，从移动开发的稀缺，到飞入寻常百姓家，移动 App 基本成为了大众互联网产品的标配。</p><a id="more"></a><h2 id="市场"><a href="#市场" class="headerlink" title="市场"></a>市场</h2><p>从经济市场角度来看，自2017年以来中国经济的转型，资本市场融资日渐困难，万众创业的热度依然不再。当然，巨无霸的超级APP更是让移动互联的想象力挤压殆尽，剩下些小众市场更是难以容纳大量的移动端从业者。</p><p>从供需市场角度看，自移动互联网时代开始，大量的从业者涌入进来，而随着经济下行，市场萎缩，后来者会很惊愕的看到：移动端开发已经很难找到工作。最开始的能写自定义视图，到现在的精通XX语言，熟悉底层原理机制。固然会有“面试硕博级，入职搬砖级“的自嘲，但这又何尝不是一种无奈的筛选机制。大浪过后，总能看到不少的裸泳者。</p><p>再从技术角度看，这些年来移动开发领域相继诞生了组件化、热修复、动态化、大前端、Flutter、小程序等热门技术，给人一种 “乱花渐欲迷人眼” 的感觉，它们争先恐后地成为行业焦点，然后又在不知不觉中被后来者替代，最后再逐步淡出开发者的视野。这也常常让不少人感叹：学不动了。</p><h2 id="技术"><a href="#技术" class="headerlink" title="技术"></a>技术</h2><p>看似纷繁杂乱的热门技术，实际上也是在递进式推动着移动技术的发展。它们背后都是一些通用的底层技术和创新的设计思想。比如说热修复、动态化和大前端的底层技术，都是 JavaScriptCore 这样的 JavaScript 虚拟机技术；再比如，大前端和 Flutter 的渲染，使用的都是 WebCore 中 Skia 这样的渲染引擎。</p><p>以组件化为例，<strong>它是顺应着 App 从单一业务到多业务汇聚的演进而出现的一门技术</strong>。比如微信刚发布时业务单一，就只有聊天的功能，后来又加上了支付、朋友圈、游戏，再等到小程序功能上线后更是打车、电影票、购物等只要你能想到的需求它都有，俨然成为了一个超级平台。</p><p>从本质上讲，<strong>组件化是将上层业务隔离开，下层提供通用能力的一种架构模式，这样上层业务团队可以分开从而减少团队沟通成本，下层能力的通用性又反过来提高了各个业务团队的开发效率</strong>。为了达到不同业务隔离的结果，解耦手段不断被引入到 iOS 开发中，比如使用协议或者中间者模式在运行时统调等方式。</p><p>再比如热修复，热修复技术的核心引擎主要就是 JavaScriptCore，它要求原生开发者使用 JavaScript 来编写代码。而为了方便原生开发者，热修复引擎最大卖点就是将原生 Objective-C 代码转成 JavaScript 代码然后让 JavaScriptCore 去解释。这样一个代码转换过程其实就是通过编译技术来实现的。</p><p>目前正流行的这波大前端和小程序浪潮中，各种大前端技术都对 Web 标准做了大量限制，定义了自己的规范模板。这些自定义的模板最终都会使用 Babel 这样的前端编译技术将其编译成 JavaScript 代码，然后再交给 JavaScriptCore 解释调用原生渲染。</p><p>你只要静下心来好好消化掉这几年浪潮留下的关键技术，在这个基础上再去理解各种 “新技术”，必然会驾轻就熟。</p><h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>没人要，学不动，想必是不少的人困惑。</p><p>对于”手艺人“来说，我们最大的依仗也就是我们的技术本身。当我们面对这些技术的时候，与其感叹学无余力，反倒不如把一门技术研究透彻，建立自己的核心根据地，然后再往外部探索，或者这样更能生出“万变不离其宗”之感。</p><p>再看看我们身边那些“厉害”角色，他们并不是样样精通，而是有擅长的领域。从这些“大神”们的成长经历来看，都是先深挖某一领域，经过大量的学习和实践后理解了编程的本质，从而可以灵活调配和运用自己已经积累的知识。在这之后，他们再探索其他领域时，就做到了既快又深，成了我们眼中的“大神”。</p><p>就比如，很多开发者，刚学会通过网络请求个数据、摆摆界面弄出 App 后，看到前端火了就开始蠢蠢欲动，人工智能火了就去学一下，区块链火了又去学一下。结果是每一门技术都学不深不说，学起来还都非常费劲。</p><p>所以，学习开发这件事儿，不要一开始就求多，而要求精、求深。因为，条条大路通罗马，计算机的细分领域虽然多，但学到底层都是一样的。</p><p><strong>不要被新技术牵着鼻子走，而是努力提升自己的内功，这样才能得心应手地应对层出不穷的各种新技术</strong>。</p><p>参考资料:  <a href="https://time.geekbang.org/column/article/85318" target="_blank" rel="noopener">戴铭: # 开篇词 | 锚定一个点，然后在这个点上深耕</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;做iOS的也有些年头，从移动开发的稀缺，到飞入寻常百姓家，移动 App 基本成为了大众互联网产品的标配。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="技术人生" scheme="http://xingzhi.wiki/categories/%E6%8A%80%E6%9C%AF%E4%BA%BA%E7%94%9F/"/>
+    
+    
+      <category term="iOS性能" scheme="http://xingzhi.wiki/tags/iOS%E6%80%A7%E8%83%BD/"/>
+    
+      <category term="技术观想" scheme="http://xingzhi.wiki/tags/%E6%8A%80%E6%9C%AF%E8%A7%82%E6%83%B3/"/>
     
   </entry>
   
@@ -531,65 +583,6 @@
       <category term="荐书" scheme="http://xingzhi.wiki/tags/%E8%8D%90%E4%B9%A6/"/>
     
       <category term="目标" scheme="http://xingzhi.wiki/tags/%E7%9B%AE%E6%A0%87/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>100个基本</title>
-    <link href="http://xingzhi.wiki/2020/04/03/20200403-100-basic/"/>
-    <id>http://xingzhi.wiki/2020/04/03/20200403-100-basic/</id>
-    <published>2020-04-03T15:19:22.000Z</published>
-    <updated>2020-04-07T15:31:48.053Z</updated>
-    
-    <content type="html"><![CDATA[<p>“100个基本”是为了让自己明白的事，是对自己展开的思考，是为了整理自己的思路而存在的。这是为了个人成长、学习，为了更像自己，而应该恪守的人生信条。重要的事情、想要遵守的规则，我想每个人都有，但这些内容其实是很模糊的，难以用言语表述。如果能一条条地认真思考如何用言语表达它们，也能借此更好地认识自身。</p><a id="more"></a><p>松浦弥太郎的“100个基本”</p><ol><li>一切自己负责。指责他人也无济于事。</li><li>舍弃自尊，凡事忍耐。</li><li>简单地生活。要做的事，保持一点点就好。</li><li>不对过去说谎。</li><li>做被钱喜欢的工作，过被钱喜欢的生活。</li><li>最重要的工作，是规律生活和健康管理。</li><li>无论做什么事，都要想到下一个人。</li><li>抢占先机、确认工序、准备充分、仔细作业。</li><li>沟通，就是为了传达爱愿。</li><li>幸福，是人与人之间深刻的联结，和深深的羁绊。</li><li>不破坏，不失信。不汲汲以求，不放弃。</li><li>栽培，守护，坚持。</li><li>愈是小的承诺愈要信守。</li><li>放大镜和望远镜。</li><li>资讯就是自己的经验；知识则应适可而止。</li><li>八胜七败的法则。</li><li>看，再看，持续地看。</li><li>交朋友的能力。</li><li>为工作而玩。</li><li>电视、报纸只从远处观望。</li><li>不是“为对方着想”，是“想象力”。</li><li>磨砺心智。为此读书、听音乐、欣赏戏剧、接触文化。</li><li>成为问候高手。</li><li>基本原则是：诚实、亲切、笑容。</li><li>不竞争，不争夺。</li><li>常对自己投资。为体验花钱。不用贫穷的方法学习。</li><li>吃用心做的美味食物。</li><li>要顾及到四周。不制造噪音，举止安静。</li><li>重要的事写在信上。勤于动笔。</li><li>培养上等的修养。手不插入口袋。</li><li>想要伙伴，先制造敌人。</li><li>要了解，孤独是生而为人的条件。</li><li>常保指尖和手的清洁。</li><li>去思考，这样做会给他人带来幸福吗？</li><li>每日，换个设想。</li><li>任何东西都要修缮。</li><li>不只关注中间，也看周围。并去思考。</li><li>与其读一百本书，不如把一本好书读一百遍。</li><li>在自己擅长的领域深入下去不断磨炼、挑战。</li><li>不为自己设限。</li><li>贯彻自己的意图。</li><li>始终保持坦诚，决不遗失初心。</li><li>关键时刻不怯场的勇气。</li><li>承蒙他人好意时就不要顾虑。坦率地接受好意，给足面子。</li><li>有意识地使用美而恭敬的措辞。</li><li>不随便对待钱包。不把钱包放在低处。</li><li>任何事物，都当作重要的朋友接待。</li><li>他人的话、社会的声音，要认真聆听。</li><li>不断思考如何成为他人愿意共处的人。</li><li>不问年龄，所遇者皆是我师。</li><li>模仿、学习、赞扬尊敬的人。</li><li>成为连接人与人的桥梁。</li><li>知晓各领域的最好和最坏。</li><li>重视朋友。</li><li>不要根据价格评判“贵”或“便宜”。</li><li>认真听他人讲话，持续、深入倾听。</li><li>一周买一次花。</li><li>两周剪一次头发。</li><li>一年四次，享用当季美食。</li><li>无论发生什么都不放弃。</li><li>持续思考何为美。</li><li>不买就什么也学不到，想知道的事要花大钱。</li><li>不靠近免费的东西。</li><li>恰如其分地交际，不做八面玲珑的人。</li><li>重视家人，一年扫墓六次。</li><li>桌上什么都不放，从一张白纸的状态开始工作。</li><li>书是用来读的，不是装饰品。读了就可以处理掉。</li><li>珍惜、享受、体味独处的时间。</li><li>推进“自我项目”。</li><li>楼梯是一级级向上爬的。</li><li>享受麻烦。</li><li>思考的事情、想法，都写在纸上。</li><li>不惧怕失败，做好“失败笔记”。</li><li>不使用“绝对”“普遍”这样的词。</li><li>以1、2、3 的节奏，如此反复。</li><li>走路时端正姿势。挥动双手。抬头挺胸。</li><li>想要得到别人的帮助，请先学会付出。</li><li>不做温柔的人，也不做冷漠的人。</li><li>爱是给予对方施展的空间。相爱是让双方都有这样的自由。</li><li>学习历史，并从历史中学习。</li><li>不交抱双臂或翘二郎腿。留意坐姿。</li><li>不把“没有钱”“没有时间”放在嘴上。</li><li>迷失的时候，选择更艰辛的那条路。</li><li>尝试逆向思考。</li><li>懂得刹车比会加速和操控方向盘更重<br>要。</li><li>随时调整平衡，心系协调之美。</li><li>播种、浇水、培育、收获，做个农夫。</li><li>永远提前15 分钟。</li><li>不要忘记传达感想。</li><li>不谈论不在场的人。</li><li>是生活而不是工作让我们之所以为人。</li><li>清洁感比时髦更重要。服装表达着对他人的敬意。</li><li>宁做失败者不做弱者。</li><li>对厕所也要致谢。凡事都心存感激。</li><li>不断思考如何能做得更好。</li><li>身边若增加一件东西，就想办法减去一件。</li><li>在寝具和家具上花钱不吝啬。</li><li>为能说三种语言而努力。</li><li>与时间做朋友。做为时间喜欢的工作，过被时间喜欢的生活。</li><li>时常更新自己的“基本”</li></ol>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;“100个基本”是为了让自己明白的事，是对自己展开的思考，是为了整理自己的思路而存在的。这是为了个人成长、学习，为了更像自己，而应该恪守的人生信条。重要的事情、想要遵守的规则，我想每个人都有，但这些内容其实是很模糊的，难以用言语表述。如果能一条条地认真思考如何用言语表达它们，也能借此更好地认识自身。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="思考" scheme="http://xingzhi.wiki/categories/%E6%80%9D%E8%80%83/"/>
-    
-      <category term="读书笔记" scheme="http://xingzhi.wiki/categories/%E6%80%9D%E8%80%83/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-      <category term="总结" scheme="http://xingzhi.wiki/categories/%E6%80%9D%E8%80%83/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E6%80%BB%E7%BB%93/"/>
-    
-    
-      <category term="笔记" scheme="http://xingzhi.wiki/tags/%E7%AC%94%E8%AE%B0/"/>
-    
-      <category term="杂记" scheme="http://xingzhi.wiki/tags/%E6%9D%82%E8%AE%B0/"/>
-    
-      <category term="生活" scheme="http://xingzhi.wiki/tags/%E7%94%9F%E6%B4%BB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>微言小义：2020W13</title>
-    <link href="http://xingzhi.wiki/2020/03/29/20200329-13Week/"/>
-    <id>http://xingzhi.wiki/2020/03/29/20200329-13Week/</id>
-    <published>2020-03-29T15:53:27.000Z</published>
-    <updated>2020-04-07T16:14:17.808Z</updated>
-    
-    <content type="html"><![CDATA[<p>本周主要内容为:科学决策。决策的本质就是做选择，选择更满意的选项。它受决策者是否理性，选项信息是否完全，评判的价值观是否稳定等因素的影响。决策没有最优选项，只有在那个时间点的满意的选项。在疫情肆虐，社会动荡时期，如何才能让自己的决策变得更加科学，如何做出更有利的决策是很有必要的事情。 </p><p>本周荐书：《对赌》，这是一本科学决策的书，让我们在这个充满不确定性的时代，在决策时时常面临信息不足、不理性和盲从的局面下，做出正确的决策。</p><a id="more"></a><h2 id="20200323"><a href="#20200323" class="headerlink" title="20200323"></a>20200323</h2><h3 id="态度"><a href="#态度" class="headerlink" title="| 态度"></a>| 态度</h3><p>决策高手必须能够区分以下这些东西：</p><ul><li>运气和技艺</li><li>信号和噪音</li><li>决策水平和决策带来的结果</li></ul><p>科学决策的第一步是把你对事物的判断给“概率化”。要做到审视信息的真假，严肃对待你的信念，你必须投入真金白银跟人打赌，有点 skin in the game，你自然就会好好地审视一番。</p><p><strong>严肃而且投入的态度，是科学决策的前提。</strong></p><h3 id="基本功"><a href="#基本功" class="headerlink" title="| 基本功"></a>| 基本功</h3><p>把决策水平和运气分开。头脑清醒的人必须能区分决策和运气。</p><p>人们总是事后诸葛亮，认为如果结果不好，当初肯定可以有更好的决策 —— 可是如果你经常打扑克，你就知道完全不是这么回事。</p><p>扑克选手把这种情况叫“结果论（resulting）”。扑克要打很多很多把，你在乎的是一个能够以大概率赢钱的科学决策系统，而不是某一把的输赢。如果因为这把输了就随意改动决策系统，这就是结果论，你就等于没系统。</p><p>普通人关注结果，高手关注系统。这是科学决策的基本功。</p><p>高手不以成败论英雄，他注重的是决策水平的高低、是决策过程的合理性，而不是最后的结果。</p><h2 id="20200324"><a href="#20200324" class="headerlink" title="20200324"></a>20200324</h2><h3 id="技术之一：增加选项"><a href="#技术之一：增加选项" class="headerlink" title="| 技术之一：增加选项"></a>| 技术之一：增加选项</h3><p>如果只能选择yes或no，长期看有52%的决定是错的，增加一两个选项，选错的比率下降到32%。</p><p>最简单的增加选项的办法，是“借鉴”。借鉴的思路，是“寻找亮点”，在大多数人都失败的局面下，看那几个成功的是怎么做的。有了各种选项之后，要把多个选项摆在桌子上，把所有方案都摆出来，统一选择——就像古代谋士一次性給主公三个主意：上策、中策、下策。</p><p>老江湖和女高中生做决策的最大区别在于老江湖总是考虑多个选项。如果你没有选项，你那不叫决策，只能叫决心。</p><h3 id="技术之二：及时复盘"><a href="#技术之二：及时复盘" class="headerlink" title="| 技术之二：及时复盘"></a>| 技术之二：及时复盘</h3><p>提高技艺的具体操作原则其实很简单，无非就是从经验中获得有效反馈，跟我们常说的“刻意练习”是一样的道理。</p><p>复盘应该是这样的：你要假设各种替代可能性。比如说你在大冬天开车，路过一个十字路口的时候，因为路上有冰，你的车失控了，导致一起交通事故。这件事当然有运气成分，但是如果你想从中吸取教训、乃至于提高驾驶水平，你应该这么复盘 ——</p><ul><li>你事先是否想到了路上可能有冰？</li><li>明知是这样的天气，你是不是开得太快了？</li><li>发现车开始打滑的时候，你的操控是否有问题：你方向盘是不是打错了，你是不是不应该猛踩刹车？</li><li>小路容易结冰，大路应该已经都撒上盐了，你为什么当初不选择走大路？</li><li>你家里有辆更适合冬天路况的车，你为什么不开那辆车？</li></ul><p>这些可能性有的有用有的没用，但是你一定要考虑得非常全面，然后非常严肃地面对所有这些可能性。</p><h2 id="20200325"><a href="#20200325" class="headerlink" title="20200325"></a>20200325</h2><h3 id="障碍之一：自利性偏差"><a href="#障碍之一：自利性偏差" class="headerlink" title="| 障碍之一：自利性偏差"></a>| 障碍之一：自利性偏差</h3><p>出了事儿都怪别人，这真是人之常情。心理学家对此有个专门的名词，叫“自利性偏差（self-serving bias）”。自利性偏差包括</p><ul><li>第一，如果我做这件事没做好，那肯定是因为不可控的、别人的、或者意外的缘故；</li><li>第二，如果我做这件事成功了，那肯定是因为我水平高。</li></ul><p>这种态度会让你自我感觉良好，但是可不能让你提高决策水平。</p><p>克服自利性偏差，有两个办法：</p><ul><li>转换视角：把自己和别人的成败给换位想象一下。</li><li>成立小组：这个小组必须有下面这样的品质 ——<ul><li>第一，尽可能提供客观准确的观点。</li><li>第二，说话得“算话”。这就是说你不能给人瞎提意见，你提出的意见你自己也要执行才行。</li><li>第三，对不同的观点保持开放态度。</li></ul></li></ul><h3 id="障碍之二：情绪"><a href="#障碍之二：情绪" class="headerlink" title="| 障碍之二：情绪"></a>| 障碍之二：情绪</h3><p><strong>情绪会扭曲你对事物的判断。</strong></p><p>情绪的问题就在于，明明是个很小的事儿，它会让你觉得那个事儿特别大。</p><p>情绪对人的误导还体现在相同的结果会带来很不同的情绪。这个受到情绪影响的精神状态，有个专有名词，叫做“tilt” —— 也就是倾斜。如果你是处在倾斜的状态，千万别做决策。因为这时候的你根本不知道什么重要什么不重要。</p><p>你最需要判断的，是你自己是不是处于 tilt 状态。你要善于观察自己的状态。特别是与人相处的时候，千万不要在愤怒状态下做任何决定。</p><p>克服情绪的办法：</p><ol><li>设立反对派：把兼听则明给程序化，并且要求给出具体的反对理由<ul><li>决策过程没有反对派，就好像庭审只有法官没有辩护律师。</li><li>办法是制定一支“蓝军”部队，专门唱反调。因为是奉命反对，所以对事不对人。</li><li>个人决策时，也应该找几个朋友提反对意见，帮你用理智战胜情感。</li></ul></li><li>从远处旁观：克服短期情绪，尽量从一个远距离考虑问题；<ul><li>要跳出来，以旁观者的视角观察自己。 </li><li>考虑十分钟、十个月和十年之后你会对此作何感想。</li><li>10/10/10法则 是一个特别好的旁观技术，要求你从三个时间尺度去考虑一个问题。让过去的你、现在的你、和未来的你，一起做决策。</li></ul></li><li>考虑价值观：<ul><li>如果利益计算已经无法让你判断优劣，那就想想自己的核心价值观是什么。</li><li>价值观就是你设定的“优先级”，就是你认为什么重要、什么不重要。它可以指导我们决策。</li></ul></li></ol><h2 id="20200326"><a href="#20200326" class="headerlink" title="20200326"></a>20200326</h2><h3 id="卡尼曼简单决策法"><a href="#卡尼曼简单决策法" class="headerlink" title="| 卡尼曼简单决策法"></a>| 卡尼曼简单决策法</h3><p>一个事实特别有意思：简单规则得到的结果并不比大数据复杂模型的结果差。</p><ol><li>选择几个你认为对结果有重要影响的因素，不要超过六个。</li><li>按照比如说满分十分的统一标准，对每个因素打分。</li><li>把分数简单相加获得总分。</li></ol><h3 id="希思兄弟决策指导思想"><a href="#希思兄弟决策指导思想" class="headerlink" title="| 希思兄弟决策指导思想"></a>| 希思兄弟决策指导思想</h3><p>希思兄弟把这决策过程的指导思想，总结成四句话：</p><ul><li><ol><li>扩充你的选项；</li></ol></li><li><ol start="2"><li>用现实检验你的观点；</li></ol></li><li><ol start="3"><li>从长远考虑；</li></ol></li><li><ol start="4"><li>为一旦决策错误做好准备</li></ol></li></ul><p>用中国话来说，这四步就是第一奇计百出、第二实事求是、第三从长计议、第四未料胜先料败。</p><h3 id="保金斯基试水三原则"><a href="#保金斯基试水三原则" class="headerlink" title="| 保金斯基试水三原则"></a>| 保金斯基试水三原则</h3><p>对实干家来说，并没有什么“谋定而后动”的决策。实干家的决策都是一个动态的过程，你先动起来，看看情况再调整。</p><p>保金斯基特别主张试水！保金斯基提出，用试水的方法创新，有三个原则：</p><ul><li><ol><li>尽可能地尝试新事物；</li></ol></li><li><ol start="2"><li>尝试要可控，要确保试验不给我们带来灾难性的后果；</li></ol></li><li><ol start="3"><li>获得反馈，从结果中学习，随时调整做法。</li></ol></li></ul><p>想想这三条，这不就是中国人爱说的“摸着石头过河”吗？</p><h2 id="20200327"><a href="#20200327" class="headerlink" title="20200327"></a>20200327</h2><p>研究发现，决策理论水平和决策操作水平是两码事，所罗门悖论确实存在。</p><p>而主动切换视角，是科学决策的最有效手段。</p><p>说一千道一万，真正的决策水平还得在实践中提高。不过话说回来，读书也不是真没用。做事演练可以决定你的成熟度，但读书可以决定你的格局。</p><p>这不是想法问题，这是气质问题。不以物喜不以己悲，骤然临之而不惊，无故加之而不怒，这样的人才可以指望他做决策。</p><h2 id="20200329"><a href="#20200329" class="headerlink" title="20200329"></a>20200329</h2><h3 id="荐书：《对赌》"><a href="#荐书：《对赌》" class="headerlink" title="荐书：《对赌》"></a>荐书：<a href="https://book.douban.com/subject/30347596/" target="_blank" rel="noopener">《对赌》</a></h3><p>作者: <a href="https://book.douban.com/search/%E5%AE%89%E5%A6%AE%C2%B7%E6%9D%9C%E5%85%8B" target="_blank" rel="noopener">(美)安妮·杜克</a><br>出版社: 中信出版社<br>副标题: 信息不足时如何做出高明决策<br>原作名: Thinking in Bets:Making Smarter Decisions When You Don’t Have All the Facts<br>译者: <a href="https://book.douban.com/search/%E6%9D%8E%E5%85%89%E8%BE%89" target="_blank" rel="noopener">李光辉</a><br>出版年: 2018-12<br>页数: 296<br>豆瓣评分：7.4</p><p><img src="https://img9.doubanio.com/view/subject/l/public/s29958175.jpg" alt="对赌"></p><p>总有些时刻面临关键决策。在这个充满不确定性的时代，我们在决策时时常面临信息不足、不理性和盲从的局面。一旦决策错误，就要用更长时间来为之买单。我们需要专业的决策课。</p><p>本书作者安妮•杜克是认知心理学博士，同时也是传奇职业扑克手。获得过世界扑克系列赛大笔奖金的她明白：职业扑克手就是职业决策者。在信息不足时，扑克手需要在两分钟内做出20个决策，本质上像一场又一场的决策实验。杜克融合心理科学和扑克高手实战经验，总结出了对赌思维。她为许多世界500强高管提供决策咨询，帮助他们放弃对确定性不切实际的追求，更好地评估事实，优选决策方案。</p><p>它让你了解决策背后是概率选择，真正关注决策质量而不以结果论成败；让你破除心理上的自利性偏差，让你在情绪不稳的情况下及时退出止损。</p><p>培养了科学的认知习惯后，加上各种思维工具的有效运用，如同伴制的求真团体和心理时间旅行法等，最终建立你强大且完整的科学决策系统。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;本周主要内容为:科学决策。决策的本质就是做选择，选择更满意的选项。它受决策者是否理性，选项信息是否完全，评判的价值观是否稳定等因素的影响。决策没有最优选项，只有在那个时间点的满意的选项。在疫情肆虐，社会动荡时期，如何才能让自己的决策变得更加科学，如何做出更有利的决策是很有必要的事情。 &lt;/p&gt;
-&lt;p&gt;本周荐书：《对赌》，这是一本科学决策的书，让我们在这个充满不确定性的时代，在决策时时常面临信息不足、不理性和盲从的局面下，做出正确的决策。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="思考" scheme="http://xingzhi.wiki/categories/%E6%80%9D%E8%80%83/"/>
-    
-      <category term="微言小义" scheme="http://xingzhi.wiki/categories/%E6%80%9D%E8%80%83/%E5%BE%AE%E8%A8%80%E5%B0%8F%E4%B9%89/"/>
-    
-    
-      <category term="微言小义" scheme="http://xingzhi.wiki/tags/%E5%BE%AE%E8%A8%80%E5%B0%8F%E4%B9%89/"/>
-    
-      <category term="荐书" scheme="http://xingzhi.wiki/tags/%E8%8D%90%E4%B9%A6/"/>
-    
-      <category term="决策" scheme="http://xingzhi.wiki/tags/%E5%86%B3%E7%AD%96/"/>
     
   </entry>
   

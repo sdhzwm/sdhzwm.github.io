@@ -33,6 +33,35 @@
     
     
     <entry>
+      <title>小谈 Auto Layout</title>
+      <link href="/2020/08/14/20200814-iOS-Autolayout/"/>
+      <url>/2020/08/14/20200814-iOS-Autolayout/</url>
+      
+        <content type="html"><![CDATA[<p>Auto Layout ，是苹果公司提供的一个基于约束布局，动态计算视图大小和位置的库，并且已经集成到了 Xcode 开发环境里。</p><p>苹果公司早在 iOS 6 系统时就引入了 Auto Layout，即使后来，苹果公司推出了在 Auto Layout 基础上的 UIStackView 工具，提高了开发体验和效率。当然更通用的用方式则是选用 <code>SB</code>、<code>xib</code>、<code>SnapKit</code>或者<code>Masonry</code>。</p><p>可是Auto Layout 到底是如何实现自动布局的 ？</p><a id="more"></a><h2 id="Auto-Layout-的来历"><a href="#Auto-Layout-的来历" class="headerlink" title="Auto Layout 的来历"></a>Auto Layout 的来历</h2><ul><li>1997 年，Auto Layout 用到的布局算法 Cassowary 被发明了出来；</li><li>2011 年，苹果公司将 <code>Cassowary 算法</code>运用到了自家的布局引擎 Auto Layout 中。</li></ul><p><code>Cassowary</code> 能够有效解析线性等式系统和线性不等式系统，用来表示用户界面中那些相等关系和不等关系。</p><p><code>Cassowary</code> 开发了一种规则系统，通过约束来描述视图间的关系。<strong>约束就是规则，这个规则能够表示出一个视图相对于另一个视图的位置</strong>。</p><p><code>Cassowary 算法</code>让视图位置可以按照相对位置描述，在运行时动态地计算出视图具体的位置。这样一来视图位置的写法大大的被简化了，界面相关代码也就更易于维护。</p><h2 id="Auto-Layout-生命周期"><a href="#Auto-Layout-生命周期" class="headerlink" title="Auto Layout 生命周期"></a>Auto Layout 生命周期</h2><p><code>Auto Layout</code> 的核心是 <code>Layout Engine</code>，由它来主导页面的布局。它是一整套布局引擎系统，包含了布局在运行时的生命周期，用来统一管理布局的创建、更新和销毁。Auto Layout拥有一套Layout Engine引擎，</p><p><code>Layout Engine</code> 主导着整个界面布局。每个视图在得到自己的布局之前，<code>Layout Engine</code> 会将<strong>视图、约束、优先级、固定大小通过计算转换成最终的大小和位置</strong>。在 <code>Layout Engine</code> 里，每当约束发生变化，就会触发 <code>Deffered Layout Pass</code> ，完成后进入监听约束变化的状态。当再次监听到约束变化，即进入下一轮循环中。整个过程如下图所示：</p><p><img src="https://imagerepos.oss-cn-beijing.aliyuncs.com/images/20210415212444.png" alt="图片来自戴铭《iOS开发高手课》专栏"></p><p><code>Constraints Change</code>  表示的就是约束变化，添加、删除视图时会触发约束变化。</p><p><code>Activating</code> 或 <code>Deactivating</code>，设置 <code>Constant</code> 或 <code>Priority</code> 时也会触发约束变化。</p><p><code>Layout Engine</code> 在碰到约束变化后会重新计算布局，获取到布局后调用 <code>superview.setNeedLayout()</code>，然后进入 <code>Deferred Layout Pass</code>。<code>Deferred Layout Pass</code> 的主要作用是做容错处理。</p><p>如果有些视图在更新约束时没有确定或缺失布局声明的话，会先在这里做容错处理。接下来，<code>Layout Engine</code> 会从上到下调用 <code>layoutSubviews()</code> ，通过 <code>Cassowary</code> 算法计算各个子视图的位置，算出来后将子视图的 <code>frame</code> 从 <code>Layout Engine</code> 里拷贝出来。</p><p>简单来讲就是当 App 启动后，主线程的 <code>Run Loop</code> 会一直处于监听状态，当约束发生变化后会触发<code>Deffered Layout Pass</code>（延迟布局传递），在里面做容错处理（约束丢失等情况）并把 view 标识为dirty 状态，然后 <code>Run Loop</code> 再次进入监听阶段。当下一次刷新屏幕动作来临（或者是调用 <code>layoutIfNeeded</code> ）时，<code>Layout Engine</code> 会从上到下调用 <code>layoutSubviews()</code> ，通过 <code>Cassowary 算法</code> 计算各个子视图的位置，算出来后将子视图的 <code>frame</code> 从 <code>Layout Engine</code> 拷贝出来，接下来的过程就跟手写 <code>frame</code> 是一样的了。</p><h2 id="Auto-Layout-性能怎样"><a href="#Auto-Layout-性能怎样" class="headerlink" title="Auto Layout 性能怎样"></a>Auto Layout 性能怎样</h2><p>苹果公司在 <code>WWDC 2018</code> 的“ <code>WWDC 220 Session High Performance Auto Layout”Session</code> 中介绍说： iOS 12 将大幅提高 Auto Layout 性能，使滑动达到满帧。在 <code>202 Session</code> 里讲到的 <code>Auto Layout</code> 在 iOS 12 中优化后的表现。如下图</p><p><img src="https://imagerepos.oss-cn-beijing.aliyuncs.com/images/20210415212521.png" alt="WWDC 2018 202"></p><p>可以看到，优化后的性能，已经基本和手写布局一样可以达到性能随着视图嵌套的数量呈线性增长了。而在此之前的 Auto Layout，视图嵌套的数量对性能的影响是呈指数级增长的。</p><p>iOS 12 之前，很多约束变化时都会重新创建一个计算引擎 <code>NSISEnginer</code> 将约束关系重新加进来，然后重新计算。结果涉及到的约束关系变多时，新的计算引擎需要重新计算，最终导致计算量呈指数级增加。而 iOS12 的 <code>Auto Layout</code> 更多地利用了 <code>Cassowary</code> 算法的界面更新策略，使其真正完成了高效的界面线性策略计算。</p><h2 id="常用思路"><a href="#常用思路" class="headerlink" title="常用思路"></a>常用思路</h2><p>在日常工作中，不少团队依然选用手写布局，原因在于在 <code>layoutSubviews</code> 中做布局，可以将所有的子视图按照 UI 显示从上至下、从左至右的顺序来布局，看起来会很规范，代码不会导致不易维护的程度。  </p><p>不过也有不少团队也有约定：</p><ul><li>简单的 UI 使用 Auto Layout</li><li>复杂的 UI 使用 Frame</li></ul><p>原因在于：</p><ol><li>从代码量上来看，两种布局方式相差不大。然而在涉及到复杂布局或者动画的话，使用 <code>Auto Layout</code> 的话，反而会变得更加复杂。无论是处理复杂的业务逻辑还是复杂的交互逻辑。</li><li>区分静态UI和动态UI，把静态UI和微动态UI交给 <code>Auto Layout</code> 或者 直接使用 <code>XIB</code>。</li><li>不确定高度的cell，区分不同场景。例如控件布局简单，可利用其特性进行自适应即可，相反计算高度倒不失为一种不错的方式。</li></ol><hr><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul><li><a href="https://developer.apple.com/videos/play/wwdc2018/220" target="_blank" rel="noopener">High Performance Auto Layout - WWDC 2018 - Videos - Apple Developer</a></li><li><a href="https://github.com/ming1016/ShowAutoLayout" target="_blank" rel="noopener">ShowAutoLayout</a></li><li><a href="https://developer.apple.com/videos/play/wwdc2015-219/" target="_blank" rel="noopener">WWDC 2015: Mysteries of Auto Layout</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 技术人生 </category>
+          
+          <category> 读书笔记 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> iOS </tag>
+            
+            <tag> UI布局 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>20200719-29Week</title>
       <link href="/2020/07/19/20200719-29Week/"/>
       <url>/2020/07/19/20200719-29Week/</url>

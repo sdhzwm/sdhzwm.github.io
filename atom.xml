@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://xingzhi.wiki/"/>
-  <updated>2021-04-13T14:16:29.934Z</updated>
+  <updated>2021-04-18T14:44:13.060Z</updated>
   <id>http://xingzhi.wiki/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>人生日课：2021W15</title>
+    <link href="http://xingzhi.wiki/2021/04/18/202104182240-15Weekly/"/>
+    <id>http://xingzhi.wiki/2021/04/18/202104182240-15Weekly/</id>
+    <published>2021-04-18T14:40:39.000Z</published>
+    <updated>2021-04-18T14:44:13.060Z</updated>
+    
+    <content type="html"><![CDATA[<p>自去年离沪，周报就断更至今。固然有环境变换的原因，总的来说，还是过于懒惰。</p><p>年已三十，时常在想如何记录自己的人生。用怎样的形式来记录，记录怎样的内容，才能更彰显其价值。阳志平老师21年开设了《人生资本》，从社会资本、文化资本、心理资本和技能资本四个维度来衡量人生。那么，从这个角度，是否可借鉴到之后的记录中来呢？</p><p>由此分化出以下几个维度</p><ul><li>技术，包含了工作相关，借鉴职场生存与进阶的相关记录</li><li>观世界，包含技能、方法论、新奇观点，能够影响到自己的大事件、大讨论</li><li>思考，记录自己的所有所有输出，包括生产的卡片、读书笔记，以及碎片化的思考等</li></ul><p>以此结构，作为21年自我记录的尝试，是为序。</p><p>&lt;!–more – &gt;</p><hr><h1 id="技术"><a href="#技术" class="headerlink" title="技术"></a>技术</h1><h2 id="可借鉴"><a href="#可借鉴" class="headerlink" title="可借鉴"></a>可借鉴</h2><ul><li><a href="https://juejin.cn/post/6950184278756065293#heading-15" target="_blank" rel="noopener">APP启动优化</a></li><li><a href="https://www.toutiao.com/a6950231983557575205/?tt_from=weixin&amp;utm_campaign=client_share&amp;wxshare_count=1&amp;timestamp=1618284915&amp;app=news_article_social&amp;utm_source=weixin&amp;utm_medium=toutiao_ios&amp;use_new_style=1&amp;req_id=2021041311351401021204203022019316&amp;share_token=67A5F5E0-1C08-4EA9-BAB2-D0248961B567&amp;group_id=6950231983557575205&amp;wid=1618285120541" target="_blank" rel="noopener">抖音 iOS 工程架构演进</a></li><li><a href="https://juejin.cn/post/6948990967324082183?utm_source=gold_browser_extension" target="_blank" rel="noopener">哈啰出行iOS App首屏秒开优化</a></li></ul><h2 id="探索"><a href="#探索" class="headerlink" title="探索"></a>探索</h2><ul><li><a href="https://juejin.cn/post/6950502345637625864?utm_source=gold_browser_extension" target="_blank" rel="noopener">源码解读RunLoop,理解以后面试必加分</a></li><li><a href="https://juejin.cn/post/6950170269205921828?utm_source=gold_browser_extension" target="_blank" rel="noopener">GCD源码分析</a></li><li><a href="https://juejin.cn/post/6887759096506744840" target="_blank" rel="noopener">网易云音乐 iOS 14 小组件实战手册</a></li></ul><h2 id="观点"><a href="#观点" class="headerlink" title="观点"></a>观点</h2><ul><li><a href="https://36kr.com/p/1174783047975172" target="_blank" rel="noopener">高级软件工程师必备的五大技能</a></li></ul><h2 id="团队"><a href="#团队" class="headerlink" title="团队"></a>团队</h2><ul><li><a href="https://www.toutiao.com/c/user/token/MS4wLjABAAAAVKlHQZBJGZmdsWK7YD2J35tCaIoSsZnMTKNkAzw6qEE/" target="_blank" rel="noopener">字节跳动技术团队</a></li></ul><h1 id="观世界"><a href="#观世界" class="headerlink" title="观世界"></a>观世界</h1><h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><ul><li><a href="https://36kr.com/p/1176439895769344" target="_blank" rel="noopener">整天放不下手机？6 招帮你摆脱“手机上瘾症”</a></li></ul><h2 id="思维"><a href="#思维" class="headerlink" title="思维"></a>思维</h2><ul><li><a href="https://36kr.com/p/1160523094656134" target="_blank" rel="noopener">如何拉长你的“专注时间”？（一）</a></li><li><a href="https://36kr.com/p/1160528464577672" target="_blank" rel="noopener">如何拉长你的“专注时间”？（二）</a></li><li><a href="https://36kr.com/p/1160534107423877" target="_blank" rel="noopener">如何拉长你的“专注时间”？（三）</a></li><li><a href="https://36kr.com/p/1160537306105218" target="_blank" rel="noopener">如何拉长你的“专注时间”？（四）</a></li></ul><h2 id="观点-1"><a href="#观点-1" class="headerlink" title="观点"></a>观点</h2><p><strong>#数据货币</strong></p><ul><li><a href="https://36kr.com/p/1177559916036355" target="_blank" rel="noopener">以太坊联合创始人：最重要的稀缺资源是什么？（上）</a></li><li><a href="https://36kr.com/p/1177571783000329" target="_blank" rel="noopener">以太坊联合创始人：最重要的稀缺资源是什么？（下）</a></li><li><a href="https://36kr.com/p/1176995764551939" target="_blank" rel="noopener">加密货币越炒越热，普通人不应投资的十大理由</a></li><li><a href="https://36kr.com/p/1168498032428169" target="_blank" rel="noopener">NFT：非同质化代币完全指南</a></li><li><a href="https://36kr.com/p/1168933859263873" target="_blank" rel="noopener">为什么说“比特币就是时间”？（一）</a></li><li><a href="https://36kr.com/p/1168954254918788" target="_blank" rel="noopener">为什么说“比特币就是时间”？（二）</a></li><li><a href="https://36kr.com/p/1168960166413447" target="_blank" rel="noopener">为什么说“比特币就是时间”？（三）</a></li><li><a href="https://36kr.com/p/1168963164587137" target="_blank" rel="noopener">为什么说“比特币就是时间”？（四）</a></li></ul><p><strong>#VR</strong></p><ul><li><a href="https://36kr.com/p/1172756663922050" target="_blank" rel="noopener">Oculus Rift 推出 5 年后，VR 和 AR 下一步何去何从？（上）</a></li><li><a href="https://36kr.com/p/1172795934763648" target="_blank" rel="noopener">Oculus Rift 推出 5 年后，VR 和 AR 下一步何去何从？（下）</a></li></ul><p><strong>#社交媒体</strong></p><ul><li><a href="https://36kr.com/p/1158855680411010" target="_blank" rel="noopener">社交媒体该如何实现“去中心化”？（上）</a></li><li><a href="https://36kr.com/p/1158855727318407" target="_blank" rel="noopener">社交媒体该如何实现“去中心化”？（下）</a></li></ul><p><strong>#其他</strong></p><ul><li><a href="https://36kr.com/p/1164843658331273" target="_blank" rel="noopener">mRNA 技术会改变世界吗？</a></li></ul><h1 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h1><h2 id="读书"><a href="#读书" class="headerlink" title="读书"></a>读书</h2><p>本周有些杂食，主要读了以下几本书：</p><ul><li>《苏东坡新传》</li><li>《批判教育社会学九讲》</li><li>《像哲学家一样生活：斯多葛哲学的生活艺术》</li><li>《哲学的指引》</li></ul><p>《批判教育社会学九讲》其实是 对批判教育社会学领域核心的 9 篇论文的解读。这 9 篇当中其中有3篇介绍了 布尔迪厄 的一些关键概念。例如：场域、文化资本等。理解社会，了解文化，了解权利、文化的传承，化解阶层固化带来的焦虑，这本书值得深读。</p><blockquote><p>这些制度与实践能够延续也可能不是掌权者为了自己的利益而把它们保存下来，因为主导阶层可能跟被压迫者一样都没有察觉到它们的再生产作用。它们得以继续存在，可能只是因为足以改变它们的客观条件还没有出现</p></blockquote><p>《苏东坡新传》，苏东坡是一个什么样的人？林语堂在其传记中讲到：</p><blockquote><p>苏东坡是一个秉性难改的乐天派，是悲天悯人的道德家，是散文作家，是新派的画家，是伟大的书法家，是酿酒的实验者，是工程师，是假道学的反对派，是瑜伽术的修炼者，是佛教徒，是士大夫，是皇帝的秘书，是饮酒成性者，是心肠慈悲的法官，是政治上的坚持己见者，是月下的漫步者，是诗人，是生性诙谐爱开玩笑的人。但是这还不足以道出苏东坡的全部。</p></blockquote><p>那么苏有全部么？没有！每个人眼中都有一个不同的苏东坡，林语堂所关注的苏东坡，更像是他自己，更像是各种角色的转化。而新传中的苏东坡则满肚子的不合时宜，更是有血有肉的文人。</p><p>为什么要探索哲学？这个时代每个人都需要有自己的人生哲学吧。怎么来看待生活，看待社会，看待自己的焦虑、彷徨、无助，挫折，失败，怎么看待健康、享乐、愉悦、幸福，成功。恐怕这是一个大的命题吧。建立自己的人生哲学、生活哲学，说起来很难，其实也很是简单：建立起适合自己的种种原则，知道自己从何而来，知道自己到往何处。这样就足够了。<br>两本哲学书，大抵就是带着这种目的去读的。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;自去年离沪，周报就断更至今。固然有环境变换的原因，总的来说，还是过于懒惰。&lt;/p&gt;
+&lt;p&gt;年已三十，时常在想如何记录自己的人生。用怎样的形式来记录，记录怎样的内容，才能更彰显其价值。阳志平老师21年开设了《人生资本》，从社会资本、文化资本、心理资本和技能资本四个维度来衡量人
+      
+    
+    </summary>
+    
+      <category term="人生日课" scheme="http://xingzhi.wiki/categories/%E4%BA%BA%E7%94%9F%E6%97%A5%E8%AF%BE/"/>
+    
+    
+      <category term="技术人生" scheme="http://xingzhi.wiki/tags/%E6%8A%80%E6%9C%AF%E4%BA%BA%E7%94%9F/"/>
+    
+      <category term="日课" scheme="http://xingzhi.wiki/tags/%E6%97%A5%E8%AF%BE/"/>
+    
+      <category term="读书笔记" scheme="http://xingzhi.wiki/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>APP启动速度优化与监控笔记</title>
@@ -551,37 +581,6 @@
       <category term="荐书" scheme="http://xingzhi.wiki/tags/%E8%8D%90%E4%B9%A6/"/>
     
       <category term="巅峰体验" scheme="http://xingzhi.wiki/tags/%E5%B7%85%E5%B3%B0%E4%BD%93%E9%AA%8C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>《打开积极心理学之门》笔记1</title>
-    <link href="http://xingzhi.wiki/2020/04/11/20200411-positive-psychology-01/"/>
-    <id>http://xingzhi.wiki/2020/04/11/20200411-positive-psychology-01/</id>
-    <published>2020-04-11T14:19:47.000Z</published>
-    <updated>2020-04-12T12:55:30.470Z</updated>
-    
-    <content type="html"><![CDATA[<p>现在来想象你生命的最后时刻，无论这一刻会在何时出现。假设你还有时间回顾你的一生，什么是你最满意的事情？什么是你最后悔的事情？我想你的思绪应该与你父母在你降临之时所想的是相近的。你的生活是否美好充实？你是否无论艰难险阻都竭尽全力？在你的生活中是否有相亲相爱的人？你是否在交际中尝试改变或者做得更好？</p><p>因为你一直以来总是把自己的需求置于他人的需求之上，也或许是因为你从来没有认真思考过人生的意义</p><blockquote><p>塞缪尔·理查森说：如果人类的心灵一直忙于把每件不如意的事情往悲观的方向想，则不需要敌人的出现，自己就先溃败了。</p></blockquote><p>我们要去研究如何正确把握人生的科学，关注从出生到死亡的所有人生阶段。</p><a id="more"></a><h2 id="什么是积极心理学"><a href="#什么是积极心理学" class="headerlink" title="什么是积极心理学"></a>什么是积极心理学</h2><p>积极心理学（positive psychology）是一门研究如何正确把握人生的科学，关注从出生到死亡的所有人生阶段。</p><p>积极心理学是心理学，心理学是科学，我尽量对这门关于美好生活的科学做出公正的评价，探讨的内容包含了从快乐和幸福到工作和爱情，我们知道什么，又是怎样知道的，还有什么是我们依然不知道的。</p><p>积极心理学所研究的是那些发生在生活正常轨道上的事件，重点关注的是那些可以提升生命价值的事件。</p><p>生命中美好的一面与糟糕的一面同等重要，因此需要得到心理学界同等程度的重视。积极心理学认为生活的核心并不只是避免麻烦、防止困扰，因而更加关注人生中那些风景美好的一面。</p><h2 id="积极心理学的起源"><a href="#积极心理学的起源" class="headerlink" title="积极心理学的起源"></a>积极心理学的起源</h2><p>心理学有着长久的过去，但是却只有很短的一段历史</p><p>心理学成为有规范的学科只有100多年的时间，但是它所研究的事件却是源自几个世纪之前的哲学、神学以及人们每天的生活。我们是如何认识这个世界的？我们是怎样思考和感觉的？为什么会有这样的思考和感觉？学习的本质是什么？这些对于人类个体来说意味着什么？</p><p>积极心理学作为一个界定清晰的理论观点始于1998年。</p><p>2000 年，塞林格曼和契克森米哈赖在《美国心理学家》发表论文 Positive psychology: An introduction》，标志着积极心理学的诞生。</p><h2 id="积极心理学的贡献者"><a href="#积极心理学的贡献者" class="headerlink" title="积极心理学的贡献者"></a>积极心理学的贡献者</h2><p>彼得森、奇克森特米海伊、迪纳、贾米森、瓦利恩特和塞利格曼</p><h2 id="积极心理学研究的是什么"><a href="#积极心理学研究的是什么" class="headerlink" title="积极心理学研究的是什么"></a>积极心理学研究的是什么</h2><blockquote><p>如果人类的心灵一直忙于把每件不如意的事情往悲观的方向想，则不需要敌人的出现，自己就先溃败了。</p></blockquote><p>积极心理学是对研究问题的重新聚焦，而并不是革新。实际上，积极心理学的优势在于使用以往的心理学研究范式解决新领域中关于美好生活的问题，我们也相信这些方法的有效性。</p><p>当下的积极心理学关注的是独立于已有研究和理论的学术性范畴，希望通过关于自我意识的争论使生活更有意义，从而在心理学领域中获得自身价值。</p><p>积极心理学将生活中的美好和不好都视为正常的，而人本主义心理学家通常（但也不都是）认为人们的本性是好的。所有的积极心理学家都关注同一个核心问题：美好的生活。</p><p>积极心理学的目标是描述和解释，而并非开药方。前提假设是以下问题都是应该被研究的：积极体验、积极特质、自主的制度。通往美好生活的路径是本质问题，实际上，事物是否看上去积极也同样是本质问题。</p><h2 id="积极心理的重要假设是什么"><a href="#积极心理的重要假设是什么" class="headerlink" title="积极心理的重要假设是什么"></a>积极心理的重要假设是什么</h2><p>积极心理学的基本前提：人类的优点和长处与缺点和脆弱一样真。</p><p>生活中很多积极的心理元素是我们能够幸福生活的基础，抓住这些元素，生活就会更加美好、更加充实、更加健康。人类的幸福和健康是积极心理学要研究的领域。</p><p>积极心理学的一个最重要的基本假设就是，人类善良美好的一面与病态的一面同样真实存在着。</p><h2 id="积极心理学的支柱是什么"><a href="#积极心理学的支柱是什么" class="headerlink" title="积极心理学的支柱是什么"></a>积极心理学的支柱是什么</h2><p>积极的社会关系可以促进积极特质的发展和表现，从而进一步促进积极的主观体验。在积极心理学的框架下，个体可以找到描述和理解美好生活的计划。可以将其分成3个相关的话题：<br>（1）积极的主观体验（快乐、愉悦、满意、实现感）。<br>（2）积极的个人特质（性格优点、天赋、兴趣、价值观）。<br>（3）积极的社会关系（家庭、学校、单位、社交圈、社会圈）</p><h2 id="积极心理学与人本主义心理学关系"><a href="#积极心理学与人本主义心理学关系" class="headerlink" title="积极心理学与人本主义心理学关系"></a>积极心理学与人本主义心理学关系</h2><p>积极心理学将生活中的美好和不好都视为正常的，而人本主义心理学家通常（但也不都是）认为人们的本性是好的。</p><p>积极心理学十分认同科学方法，而人本主义心理学家通常（但也不都是）怀疑科学是否能够反映事实。</p><p>如果认为美好的生活仅仅是一种选择未免太遥不可及，外界环境筑起了一道道围墙，如瘟疫、贫困和偏见，而积极心理学家所认同的是，选择的概念本身和选择意愿是完全不同的事情。</p><p>总之，积极心理学和人本主义心理学是近亲，在某些情况下，它们是相同的，而在另一些情况下，它们是有区别的。通过争论之后双方都会有所发现，而没有争论就没有创新。在任何情况下，科学都是关于一些典型的，从人本主义的角度讲反映了生活的美好，从积极心理学的角度讲反映了基本假设的研究。</p><h2 id="人们对积极心理学的看法"><a href="#人们对积极心理学的看法" class="headerlink" title="人们对积极心理学的看法"></a>人们对积极心理学的看法</h2><p>学界怀疑的重点在于社会科学总是认为人类的天性是有缺陷的，脆弱的，而且比普通人更加相信这一点。由此出发，积极心理学只能被视为无价值的研究，也许就是人类通往地狱途中的一次危险的尝试。</p><p>人们认为积极心理学是研究快乐的科学，更准确地说，是研究肤浅的快乐表象的科学。</p><h2 id="小练习"><a href="#小练习" class="headerlink" title="小练习"></a>小练习</h2><p>我让你想象自己在临终的时候回顾一生总结自己。现在向前规划你的人生，你希望自己过怎样的生活，希望你身边最亲密的人如何看待你。他们会记住你的哪些成就，哪些性格优点？总之，什么是你的遗产？</p><p>一年或五年之后再读一遍，你在通往目标的道路上前进了吗？如果你又有了新的想法，可以重新写一遍，因为这毕竟是你的遗产。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;现在来想象你生命的最后时刻，无论这一刻会在何时出现。假设你还有时间回顾你的一生，什么是你最满意的事情？什么是你最后悔的事情？我想你的思绪应该与你父母在你降临之时所想的是相近的。你的生活是否美好充实？你是否无论艰难险阻都竭尽全力？在你的生活中是否有相亲相爱的人？你是否在交际中尝试改变或者做得更好？&lt;/p&gt;
-&lt;p&gt;因为你一直以来总是把自己的需求置于他人的需求之上，也或许是因为你从来没有认真思考过人生的意义&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;塞缪尔·理查森说：如果人类的心灵一直忙于把每件不如意的事情往悲观的方向想，则不需要敌人的出现，自己就先溃败了。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;我们要去研究如何正确把握人生的科学，关注从出生到死亡的所有人生阶段。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="总结" scheme="http://xingzhi.wiki/categories/%E6%80%BB%E7%BB%93/"/>
-    
-      <category term="读书笔记" scheme="http://xingzhi.wiki/categories/%E6%80%BB%E7%BB%93/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="荐书" scheme="http://xingzhi.wiki/tags/%E8%8D%90%E4%B9%A6/"/>
-    
-      <category term="积极心理学" scheme="http://xingzhi.wiki/tags/%E7%A7%AF%E6%9E%81%E5%BF%83%E7%90%86%E5%AD%A6/"/>
     
   </entry>
   

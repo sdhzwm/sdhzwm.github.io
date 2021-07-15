@@ -130,7 +130,7 @@
         <div class="content-wrapper">
           <div id="content" class="content"><section id="posts" class="posts"><article class="post">
     <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2021/07/14/202107142338/">如何看待躺平</a>
+      <h1 class="post-title"><a class="post-link" href="/2021/07/14/202107052338/">如何看待躺平</a>
         </h1>
 
       <div class="post-meta">
@@ -146,7 +146,27 @@
 <p>“躺平” 最初起源自百度贴吧中的一则《躺平即是正义》贴文。作者自述如何在没有稳定工作的情况下通过偶尔打零工和低消费来过生活。作者写道：“每月花销控制在200块以内。日常就是家里躺，外面躺，像闲散的猫猫狗狗一样躺……躺平才是宇宙间客观的唯一真理。我选择躺平，我不再恐惧。”</p>
 <p>经过一段时间发酵，“躺平”这词逐渐与“佛系”、“内卷”合流。开始强调少工作、不买房、不买车、不购物、不结婚、不生子，用最低欲望过生活。一时间，类似“社会险恶，先躺为敬”、“一时躺平一时爽，一直躺平一直爽”的口号层出不穷。陕西省公务员考试甚至把躺平当成面试题目。</p>
           <div class="read-more">
-            <a href="/2021/07/14/202107142338/" class="read-more-link">阅读更多</a>
+            <a href="/2021/07/14/202107052338/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2021/07/05/202107152254/">从前慢，车，马，邮件都慢</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2021-07-05
+        </span><span class="post-category">
+            <a href="/categories/人生日课/">人生日课</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>好久没这么密集动笔，倒觉得想仔细思考的话题还挺多。比如【中年危机、躺平与内卷】、【谋事在人，成事在天】、【系统思维】、【开发思维】、【心智程序】等一系列话题。</p>
+<p>原本今天想要继续【中年危机、躺平与内卷】这个话题，看到好友短文提到了书信，索性就聊聊这个话题吧。</p>
+          <div class="read-more">
+            <a href="/2021/07/05/202107152254/" class="read-more-link">阅读更多</a>
           </div>
         </div></article>
       <article class="post">
@@ -313,50 +333,6 @@
           <div class="read-more">
             <a href="/2021/04/18/202104182240-15Weekly/" class="read-more-link">阅读更多</a>
           </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2020/11/29/202011292143/">iOS工程的架构设计(1)</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2020-11-29
-        </span><span class="post-category">
-            <a href="/categories/技术人生/">技术人生</a>
-            <a href="/categories/技术人生/读书笔记/">读书笔记</a>
-            </span>
-        </div>
-    </header>
-
-    <div class="post-content"><p>苹果官方推荐的 App 开发模式是 MVC，随之衍生出其他很多类 MVC 的设计模式 MVP、MVVM、MVCS ，它们在不同程度上增强了视图、数据的通信方式，使得逻辑、视图、数据之间的通信更灵活、规整、易于扩展。</p>
-<p>在 App 浪潮初期，几乎所有 App 采用的都是这种类 MVC 的结构。原因在于，MVC 是很好的面向对象编程范式，非常适合个人开发或者小团队开发。但随着团队、业务的复杂度变高，这种架构的弊端也就越发明显。</p>
-<p>一个大功能，会由多个功能合并而成，每个功能都成了一个独立的业务，团队成员也会按照业务分成不同的团队。此时，简单的逻辑、视图、数据划分再也无法满足 App 大规模工程化的需求。所以，就不得不考虑模块粒度如何划分、如何分层，以及多团队如何协作的问题了。</p>
-<p>简单架构向大型项目架构演进中，就需要解决三个问题，即：模块粒度应该如何划分？如何分层？多团队如何协作？而在这其中，模块粒度的划分是架构设计中非常关键的一步。</p>
-<h2 id="颗粒度"><a href="#颗粒度" class="headerlink" title="颗粒度"></a>颗粒度</h2><p>架构治理，就需要将老业务、老代码按照新的架构设计模式进行重构。在梳理的过程中需要遵循一定的原则。如果模块划分规则不规范、不清晰，就会导致代码耦合严重的问题，并加大架构重构的难度。这些问题主要表现在：</p>
-<p>业务需求不断，业务开发不能停。重新划分模块的工作量越大，成本越高，重构技改需求排上日程的难度也就越大。</p>
-<p>老业务代码年久失修，没有注释，修改起来需要重新梳理逻辑和关系，耗时长。</p>
-<p>其次，我们需要搞清楚模块的粒度采用什么标准进行划分，也就是要遵循的原则是什么。对于 iOS 这种面向对象编程的开发模式来说，我们应该遵循以下五个原则，即 SOLID 原则。单一功能原则：对象功能要单一，不要在一个对象里添加很多功能。开闭原则：扩展是开放的，修改是封闭的。里氏替换原则：子类对象是可以替代基类对象的。接口隔离原则：接口的用途要单一，不要在一个接口上根据不同入参实现多个功能。依赖反转原则：方法应该依赖抽象，不要依赖实例。iOS 开发就是高层业务方法依赖于协议。同时，遵守这五个原则是开发出容易维护和扩展的架构的基础。最后，我们需要选择合适的粒度。切记，大型项目的模块粒度过大或者过小都不合适。其中，组件可以认为是可组装的、独立的业务单元，具有高内聚，低耦合的特性，是一种比较适中的粒度。就像用乐高拼房子一样，每个对象就是一块小积木。一个组件就是由一块一块的小积木组成的有单一功能的组合，比如门、柱子、烟囱。在我看来，iOS 开发中的组件，不是 UI 的控件，也不是 ViewController 这种大 UI 和功能的集合。因为，UI 控件的粒度太小，而页面的粒度又太大。iOS 组件，应该是包含 UI 控件、相关多个小功能的合集，是一种粒度适中的模块。并且，采用组件的话，对于代码逻辑和模块间的通信方式的改动都不大，完成老代码切换也就相对容易些。我们可以先按照物理划分，也就是将多个相同功能的类移动到同一个文件夹下，然后做成 CocoaPods 的包进行管理。但是，仅做到这一步还不够，因为功能模块之间的耦合还是没有被解除。如果没有解除耦合关系的话，不同功能的开发还是没法独立开来，勉强开发完成后的影响范围评估也难以确定。</p>
-<h2 id="原则"><a href="#原则" class="headerlink" title="原则"></a>原则</h2><p>开闭原则：扩展是开放的，修改是封闭的。  </p>
-<p>修改是封闭的 是可以理解的 比如通过设置readonly让某些属性是只读 不让外界去修改  </p>
-<p>接口隔离原则：接口的用途要单一，不要在一个接口上根据不同入参实现多个功能。</p>
-<ol>
-<li>单一功能原则：对象功能要单一，不要在一个对象里添加很多功能；  </li>
-<li>开闭原则：扩展是开放的，修改是要封闭的；  </li>
-<li>里氏替换原则：子类对象是可以替换基类对象的；  </li>
-<li>接口隔离原则：接口的用途要单一，不要在一个接口上根据不同入参实现多个功能；  </li>
-<li>依赖反转原则：方法应该依赖抽象，不要依赖实例。iOS 开发就是高层业务方法依赖于协议。<br>同时，遵守这五个原则是开发出容易维护和扩展的架构的基础。</li>
-</ol>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a href="https://www.jianshu.com/p/8f21c244e3c6" target="_blank" rel="noopener">iOS设计模式</a></li>
-<li><a href="http://www.ruanyifeng.com/blog/2016/09/software-architecture.html" target="_blank" rel="noopener">《软件架构入门》</a></li>
-<li><a href="https://casatwy.com/iosying-yong-jia-gou-tan-kai-pian.html" target="_blank" rel="noopener">iOS应用架构谈 开篇</a></li>
-<li><a href="https://casatwy.com/iosying-yong-jia-gou-tan-viewceng-de-zu-zhi-he-diao-yong-fang-an.html" target="_blank" rel="noopener">iOS应用架构谈 view层的组织和调用方案</a></li>
-<li><a href="https://casatwy.com/iosying-yong-jia-gou-tan-wang-luo-ceng-she-ji-fang-an.html" target="_blank" rel="noopener">iOS应用架构谈 网络层设计方案</a></li>
-<li><a href="https://casatwy.com/iosying-yong-jia-gou-tan-ben-di-chi-jiu-hua-fang-an-ji-dong-tai-bu-shu.html" target="_blank" rel="noopener">iOS应用架构谈 本地持久化方案及动态部署</a></li>
-<li><a href="https://casatwy.com/iOS-Modulization.html" target="_blank" rel="noopener">iOS应用架构谈 组件化方案</a></li>
-</ul>
-
         </div></article>
       <nav class="pagination"><a class="next" href="/page/2/">
         <span class="next-text">下一页</span>
